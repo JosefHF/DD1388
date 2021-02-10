@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
-#include "hello.h"
+//#include "hello.h"
 
 void hello (const char * name, int count) {
-	if(count == 0){
+	if(count <= 0){
 		return;
 	}
+
 	std::cout << "Hello, ";
 	for(int i=0; i<count; i++){
 		if(i == count-1){
@@ -27,7 +28,8 @@ std::pair<const char *, int> parse_args (int argc, char * argv[]) {
 			try {
 		        int count = std::stoi(argv[2]);
 		        if(count < 0){
-			    	return std::make_pair("2nd argument cannot be negative",-1);
+		        	std::cerr << "Negative input is not accepted\n";
+			    	return std::make_pair("",-1);
 			    }
 			    else{
 		        	return std::make_pair(argv[1],count);
@@ -35,11 +37,11 @@ std::pair<const char *, int> parse_args (int argc, char * argv[]) {
 		        
 		    }
 		    catch (const std::invalid_argument& ia) {
-		        std::cout << "Bad 2nd argument";
-				return std::make_pair("2nd argument must be an integral greater than 0",-1);
+		        std::cerr << "2nd argument has to be a number, and greater than 0\n";
+				return std::make_pair("",-1);
 		    }
 		default:
-			std::cout << "Too many arguments";
-			return std::make_pair("Too many arguments",-1);
+			std::cerr << "Too many arguments\n";
+			return std::make_pair("",-1);
 	}
 }

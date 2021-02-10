@@ -1,0 +1,7 @@
+1. Difference between std::cout, std::cerr and std::clog?
+	
+ANS: Cout and Cerr are different streams. Cout is often used for actual program output, while cerr is mainly used for handling errors. One could pipe cerr to something else than the console, and it would not effect cout. Also, the same thing goes for clog, but clog is used for logging.
+
+2.How does #include work?
+
+ANS: Include tells the compiler to include the content of the specified file when compiling, before continuing with the original file.

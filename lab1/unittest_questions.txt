@@ -1,0 +1,8 @@
+1. Why is it important to test the boundary conditions of an implementation, especially in the case of count_if_followed_by?
+
+ANS: Because the algorithm might not behave correctly on these conditions (They are easy to miss). If they are missed, the algorithm might not behave as intended.
+
+
+2.Describe how your testcase tests if a pointer is accessing an element outside the range specified.
+
+ANS: In the case of the file count_if_followed_by, we could test this by giving a sequence of data together with a len equal to the length of the sequence-1. We expected the output 0, but the algorithm (or the pointer) accessed the last element when doing its calculation and therefore got a result equal to 1.
