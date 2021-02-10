@@ -86,116 +86,120 @@ template<class T>
 template<class T>  
    Matris<T>& Matris<T>::operator=(const Matris<T>& m)
    {
-      if (&m == this){
-          return *this;
-      }
-      m_cols = m.m_cols;
-      m_rows = m.m_rows;
-      m_capacity = m.m_capacity;
-      m_vec = new T[m_capacity];
-      for(int i=0; i<m_rows; i++)
-      {
-         for(int j=0; j<m_cols; j++)
+      if(this != &m){
+         delete[] m_vec;
+
+         m_vec = new T[m.m_capacity];
+         m_cols = m.m_cols;
+         m_rows = m.m_rows;
+         for(int i=0; i<m_rows; i++)
          {
-            m_vec[m_cols*i+j] = m.m_vec[m_cols*i+j]; 
+            for(int j=0; j<m_cols; j++)
+            {
+               m_vec[m_cols*i+j] = m.m_vec[m_cols*i+j]; 
+            }
          }
       }
       return *this;
    }
 template<class T>  
-   Matris<T>& Matris<T>::operator+(const Matris<T>& m)
+   Matris<T> Matris<T>::operator+(const Matris<T>& m)
    {
       if(m_cols != m.m_cols || m_rows != m.m_rows){
          std::cerr << "We cannot add two matrices that have different dimensions" << std::endl;
       }
       else{
+         Matris<T> temp(m_rows,m_cols);
          for(int i=0; i<m_rows; i++){
             for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] + m.m_vec[m_cols*i+j];
+               temp.m_vec[m_cols*i+j] = m_vec[m_cols*i+j] + m.m_vec[m_cols*i+j];
             }
          }
+         return temp;
       }
       return *this;
    }
 
 template<class T>  
-   Matris<T>& Matris<T>::operator+(const T scalar)
+   Matris<T> Matris<T>::operator+(const T scalar)
    {
+      Matris<T> temp(m_rows,m_cols);
       for(int i=0; i<m_rows; i++){
             for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] + scalar;
+               temp.m_vec[m_cols*i+j] = m_vec[m_cols*i+j] + scalar;
             }
          }
-      return *this;
+      return temp;
    }
 
 template<class T>  
-   Matris<T>& Matris<T>::operator-(const Matris<T>& m)
+   Matris<T> Matris<T>::operator-(const Matris<T>& m)
    {
       if(m_cols != m.m_cols || m_rows != m.m_rows){
          std::cerr << "We cannot add two matrices that have different dimensions" << std::endl;
       }
       else{
+         Matris<T> temp(m_rows,m_cols);
          for(int i=0; i<m_rows; i++){
             for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - m.m_vec[m_cols*i+j];
+               temp.m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - m.m_vec[m_cols*i+j];
             }
          }
+         return temp;
       }
       return *this;
    }
 template<class T>  
-   Matris<T>& Matris<T>::operator-(const T scalar)
+   Matris<T> Matris<T>::operator-(const T scalar)
    {
+      Matris<T> temp(m_rows,m_cols);
       for(int i=0; i<m_rows; i++){
             for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - scalar;
+               temp.m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - scalar;
             }
          }
-      return *this;
+      return temp;
    }
 template<class T>  
-   Matris<T>& Matris<T>::operator*(const Matris<T>& m)
+   Matris<T> Matris<T>::operator*(const Matris<T>& m)
    {
-    	if(m_rows == m.m_cols && m_cols == m.m_rows){
+    	if(m_cols == m.m_rows){
 	      	Matris<T> temp(m_rows,m.m_cols);
-	      	for (int i = 0; i < m_rows; i++){
-	        	for (int j = 0; j < m_cols; ++j){
-	            	for (int k = 0; k < m_cols; ++k){
-	                	temp.m_vec[i * m.m_cols + j] += m_vec[i * m_cols + k] * m.m_vec[j + k * m_cols];
-	            	}               
-	        	}
-	    	}
-	        *this = std::move(temp);
-	      	return *this;
+            for(int i=0; i<m_rows; i++){
+               for(int j=0; j<m.m_cols; j++){
+                  temp.m_vec[m_cols*i + j] = 0;
+                  for(int k=0; k<m_cols; k++){
+                     temp.m_vec[m_cols*i + j] += m_vec[m_cols*i + k] * m.m_vec[m.m_cols*k + j];
+                  }
+               }
+            }
+	         return temp;
       	}
-      	else{
+      else{
         	std::cerr << "We cannot add two matrices that have different dimensions" << std::endl;
         	exit(-1);
       }
    }
 template<class T>  
-   Matris<T>& Matris<T>::operator*(const T scalar)
+   Matris<T> Matris<T>::operator*(const T scalar)
    {
+      Matris<T> temp(m_rows,m_cols);
       for(int i=0; i<m_rows; i++){
             for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] * scalar;
+               temp.m_vec[m_cols*i+j] = m_vec[m_cols*i+j] * scalar;
             }
          }
-      return *this;
+      return temp;
    }
 template<class T>  
    void Matris<T>::operator+=(const Matris<T>& m)
    {
+      
       if(m_cols != m.m_cols || m_rows != m.m_rows){
          std::cerr << "We cannot add two matrices that have different dimensions" << std::endl;
       }
       else{
-         for(int i=0; i<m_rows; i++){
-            for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] + m.m_vec[m_cols*i+j];
-            }
-         }
+         *this = *this + m;
       }
    }
 template<class T>  
@@ -205,17 +209,18 @@ template<class T>
          std::cerr << "We cannot add two matrices that have different dimensions" << std::endl;
       }
       else{
-         for(int i=0; i<m_rows; i++){
-            for(int j=0; j<m_cols; j++){
-               m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - m.m_vec[m_cols*i+j];
-            }
-         }
+         *this = *this - m;
+         //for(int i=0; i<m_rows; i++){
+         //   for(int j=0; j<m_cols; j++){
+         //      m_vec[m_cols*i+j] = m_vec[m_cols*i+j] - m.m_vec[m_cols*i+j];
+         //   }
+         //}
       }
    }
    template<class T>  
    void Matris<T>::operator*=(const Matris<T>& m)
    {
-      if(m_rows == m.m_cols && m_cols == m.m_rows){
+      if(m_rows == m.m_cols){
       	*this = *this * m;
       }
       else{
@@ -244,12 +249,12 @@ template<class T>
    void Matris<T>::insert_row(unsigned int row_number)
    {
       if(row_number > m_rows || row_number < 0){
-         std::cerr << "Cannot insert at this row" << std::endl;
-         return;
+         //std::cerr << "Cannot insert at this row" << std::endl;
+         throw 20;
       }
       else{
          T * vec = new T[m_capacity + m_cols]; 
-         for(int i=0; i<m_rows; i++){
+         for(int i=0; i<m_rows+1; i++){
             for(int j=0; j<m_cols; j++){
                if(i == row_number){
                   vec[m_cols*i + j] = 0;
@@ -258,10 +263,11 @@ template<class T>
                   vec[m_cols*i+j] = m_vec[m_cols*i+j];
                }
                else{
-                  vec[m_cols*(i+1) + j] = m_vec[m_cols*i + j];
+                  vec[m_cols*i + j] = m_vec[m_cols*(i-1) + j];
                }
             }
          }
+         delete[] m_vec;
          m_capacity = m_capacity + m_cols;
          m_rows += 1;
          m_vec = vec;
@@ -271,8 +277,8 @@ template<class T>
    void Matris<T>::append_row(unsigned int row_number)
    {
       if(row_number >= m_rows || row_number < 0){
-         std::cerr << "Cannot insert after this row" << std::endl;
-         return;
+         //std::cerr << "Cannot insert after this row" << std::endl;
+         throw 20;
       }
       else{
 
@@ -297,6 +303,7 @@ template<class T>
                vec[m_cols*m_rows + i] = 0;
             }
          }
+         delete[] m_vec;
          m_capacity = m_capacity + m_cols;
          m_rows += 1;
          m_vec = vec;
@@ -306,15 +313,15 @@ template<class T>
    void Matris<T>::remove_row(unsigned int row_number)
    {
       if(row_number >= m_rows || row_number < 0){
-         std::cerr << "Cannot remove the this row" << std::endl;
-         return;
+         //std::cerr << "Cannot remove the this row" << std::endl;
+         throw 20;
       }
       else{
 
          T * vec = new T[m_capacity - m_cols];
          for(int i=0; i<m_rows-1; i++){
             for(int j=0; j<m_cols; j++){
-               std::cout << "i" << i << " j" << j << " row_number" << row_number << std::endl;
+               //std::cout << "i" << i << " j" << j << " row_number" << row_number << std::endl;
                if(i < row_number){
                   vec[m_cols*i + j] = m_vec[m_cols*i+j];
                }
@@ -324,6 +331,7 @@ template<class T>
                }
             }
          }
+         delete[] m_vec;
          m_capacity = m_capacity - m_cols;
          m_rows -= 1;
          m_vec = vec;
@@ -333,8 +341,8 @@ template<class T>
    void Matris<T>::insert_column(unsigned int column_number)
    {
       if(column_number >= m_cols || column_number < 0){
-         std::cerr << "Cannot insert column before the given column number" << std::endl;
-         return;
+         //std::cerr << "Cannot insert column before the given column number" << std::endl;
+         throw 20;
       }
       else{
          T * vec = new T[m_rows*(m_cols+1)];
@@ -351,6 +359,7 @@ template<class T>
                }
             }
          }
+         delete[] m_vec;
          m_capacity = m_rows*(m_cols+1);
          m_cols += 1;
          m_vec = vec;
@@ -360,8 +369,8 @@ template<class T>
    void Matris<T>::append_column(unsigned int column_number)
    {
       if(column_number >= m_cols || column_number < 0){
-         std::cerr << "Cannot insert column before the given column number" << std::endl;
-         return;
+         //std::cerr << "Cannot insert column before the given column number" << std::endl;
+         throw 20;
       }
       else{
          T * vec = new T[m_rows*(m_cols+1)];
@@ -378,6 +387,7 @@ template<class T>
                }
             }
          }
+         delete[] m_vec;
          m_capacity = m_rows*(m_cols+1);
          m_cols += 1;
          m_vec = vec;
@@ -388,8 +398,8 @@ template<class T>
    void Matris<T>::remove_column(unsigned int column_number)
    {
       if(column_number >= m_cols || column_number < 0){
-         std::cerr << "Cannot remove the this column" << std::endl;
-         return;
+         //std::cerr << "Cannot remove the this column" << std::endl;
+         throw 20;
       }
       else{
 
@@ -404,6 +414,7 @@ template<class T>
                }
             }
          }
+         delete[] m_vec;
          m_capacity = m_rows*(m_cols-1);
          m_cols -= 1;
          m_vec = vec;
@@ -444,10 +455,11 @@ template<class T>
    {
       m_cols = T();
       m_rows = T();
+      m_capacity = T();
       * m_vec = T();
    }
 
-int main(int argc, char * argv[]) {
+//int main(int argc, char * argv[]) {
 	//Constructors
 		//Matris<int> m;
 		//Matris<int> m(20);
@@ -472,5 +484,5 @@ int main(int argc, char * argv[]) {
 	//std::istringstream ss("1 2 5 4\n12 3 4 5"); // Create istringstream
     //ss >> m;
 
-    std::cout << m << std::endl;
-}
+    //std::cout << m << std::endl;
+//}

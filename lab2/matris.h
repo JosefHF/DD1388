@@ -16,12 +16,12 @@ class Matris {
       const T& operator()(const T& x, const T& y) const; // const (x,y) operator
 
       Matris<T>& operator=(const Matris<T>& m); // = operator
-      Matris<T>& operator+(const Matris<T>& m); // + operator
-      Matris<T>& operator+(const T scalar);     // + operator
-      Matris<T>& operator-(const Matris<T>& m); // - operator
-      Matris<T>& operator-(const T scalar);     // - operator
-      Matris<T>& operator*(const Matris<T>& m); // * operator
-      Matris<T>& operator*(const T scalar);     // * operator
+      Matris<T> operator+(const Matris<T>& m); // + operator
+      Matris<T> operator+(const T scalar);     // + operator
+      Matris<T> operator-(const Matris<T>& m); // - operator
+      Matris<T> operator-(const T scalar);     // - operator
+      Matris<T> operator*(const Matris<T>& m); // * operator
+      Matris<T> operator*(const T scalar);     // * operator
 
       void operator+=(const Matris<T>& m);
       void operator-=(const Matris<T>& m);
